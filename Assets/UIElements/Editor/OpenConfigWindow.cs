@@ -27,4 +27,10 @@ public static class OpenConfigWindow
         var wnd = EditorWindow.GetWindow<ExtraWindow>();
         wnd.titleContent = new GUIContent("StableDiffusion Extra");
     }
+    [MenuItem("AI Toolkit/Stable Diffusion/Info")]
+    public static void Info()
+    {
+        var wnd = EditorWindow.GetWindow<GetInfoWindow>();
+        wnd.titleContent = new GUIContent("StableDiffusion Info");
+    }
 }

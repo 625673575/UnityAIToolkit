@@ -3,7 +3,7 @@
         <ui:TextField picking-mode="Ignore" label="Prompt" value="pretty girl,korean,cyberpunk,club" name="promptText" />
         <ui:TextField picking-mode="Ignore" label="Negative Prompt" name="negativePromptText" />
         <ui:SliderInt picking-mode="Ignore" label="Step" value="50" high-value="500" name="stepSliderInt" low-value="20" show-input-field="true" />
-        <ui:Slider picking-mode="Ignore" label="Denoising Strength" value="0" high-value="1" name="denoisingStrengthSlider" />
+        <ui:Slider picking-mode="Ignore" label="Denoising Strength" value="0.95" high-value="1" name="denoisingStrengthSlider" show-input-field="true" />
         <ui:Button text="Txt2Img" display-tooltip-when-elided="true" name="txt2ImgButton" />
         <ui:GroupBox name="imageBox" style="background-image: none; height: 512px; border-left-color: rgb(0, 197, 253); border-right-color: rgb(0, 197, 253); border-top-color: rgb(0, 197, 253); border-bottom-color: rgb(0, 197, 253); width: 512px; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;" />
     </ui:VisualElement>
