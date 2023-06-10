@@ -1,0 +1,18 @@
+{
+    "name": "AIToolKit.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:3c6c22a9389ab904986e13b196cd2d13"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
