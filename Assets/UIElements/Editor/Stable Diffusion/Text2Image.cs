@@ -175,7 +175,7 @@ namespace StableDiffusion
             }
             return texture2Ds;
         }
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput, Renderer[] renderers, UnityEvent<Texture2D>[] responseEvents)
+        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput,UnityEvent<Texture2D>[] responseEvents)
         {
             if (configInstance == null)
             {
@@ -218,7 +218,7 @@ namespace StableDiffusion
                     textures = GetTexturesFromtxt2img(getReq.downloadHandler.text, txt2imgInput);
 
                     //if (!txt2imgInput.useExtra || (txt2imgInput.showExtra && txt2imgInput.useExtra && txt2imgInput.showSteps)) //set texture to output if we are not using extra, or if we are using extra and showing the progress steps
-                    Functions.ApplyTexture2dToOutputs(textures, renderers, responseEvents);
+                    Functions.ApplyTexture2dToOutputs(textures, responseEvents);
                 }
             }
 
@@ -226,16 +226,6 @@ namespace StableDiffusion
             //{
             //    yield return Img2Extras.ProcessExtraCoroutine(txt2imgInput.extraInput, textures, renderers, responseEvents);
             //}
-        }
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput, UnityEvent<Texture2D>[] responseEvents)
-        {
-            yield return  GenerateImagesCoroutine(txt2imgInput, null, responseEvents);
-        }
-
-        //Overload for renderers only
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput, Renderer[] renderers)
-        {
-            yield return GenerateImagesCoroutine(txt2imgInput, renderers, null);
         }
 
         internal static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload payload, object onReceiveTexture2D)

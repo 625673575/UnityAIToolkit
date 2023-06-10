@@ -7,23 +7,15 @@ namespace StableDiffusion
 {
     public class Functions
     {
-        public static void ApplyTexture2dToOutputs(Texture2D[] textures, Renderer[] renderers, UnityEvent<Texture2D>[] responseEvents)
+        public static void ApplyTexture2dToOutputs(Texture2D[] textures, UnityEvent<Texture2D>[] responseEvents)
         {
-            if (renderers != null)
-                for (int i = 0; i < textures.Length; i++)
-                    if (renderers[i] != null)
-                        renderers[i].material.mainTexture = textures[i];
-
             if (responseEvents != null)
                 for (int i = 0; i < responseEvents.Length; i++)
                     responseEvents[i]?.Invoke(textures[i]);
         }
 
-        public static void ApplyTexture2dToOutputs(Texture2D texture, Renderer renderer, UnityEvent<Texture2D> responseEvent)
+        public static void ApplyTexture2dToOutputs(Texture2D texture, UnityEvent<Texture2D> responseEvent)
         {
-            if (renderer != null)
-                renderer.material.mainTexture = texture;
-
             if (responseEvent != null)
                 responseEvent?.Invoke(texture);
         }

@@ -17,7 +17,8 @@ namespace StableDiffusion
         private TextField installationDirectory;
         private TextField launchFile;
         private TextField address;
-        public static LaunchSetup Setup { get; private set; }
+        private static LaunchSetup _setup;
+        public static LaunchSetup Setup { get { return _setup ?? ScriptableObject.CreateInstance<LaunchSetup>(); } set { _setup = value; } }
         #endregion
         private void CreateGUI()
         {

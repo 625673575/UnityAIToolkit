@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Events;
 using System.IO;
+using UnityEditor;
 
 namespace StableDiffusion
 {
@@ -73,17 +74,22 @@ namespace StableDiffusion
 
         public bool saveImageToFile = false;
 
-        public Img2ImgPayload()
-        {
-            Initialize();
-        }
-
         public void Initialize()
         {
             //set the upscaler string to the dropdown enum
             //hr_upscaler = upscalerModel.GetStringValue();
             //sampler_name = samplerMethod.GetStringValue();
-
+            bool allReadable = true;
+            foreach(var image in images)
+            {
+                if (!image.isReadable)
+                {
+                    Debug.LogError($"{AssetDatabase.GetAssetPath(image)} is not readable!");
+                    allReadable = false;
+                }
+            }
+            if(!allReadable)
+                throw new ArgumentException("Not all images are readable, you can make texture readable in the Texture Import Settings");
             if (images != null)
                 init_images = Functions.GetStringsFromTextures(images);
         }
@@ -97,20 +103,9 @@ namespace StableDiffusion
     public static class Image2Image
     {
         private static LaunchSetup configInstance => SetupWindow.Setup;
+        private const string logPrefix = "SD: img2img";
 
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput, UnityEvent<Texture2D>[] responseEvents)
-        {
-            GenerateImagesCoroutine(txt2imgInput, null, responseEvents);
-            yield return null;
-        }
-
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput, Renderer[] renderers)
-        {
-            GenerateImagesCoroutine(txt2imgInput, renderers, null);
-            yield return null;
-        }
-
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput, Renderer[] renderers, UnityEvent<Texture2D>[] responseEvents)
+        public static IEnumerator GenerateImagesCoroutine(Img2ImgPayload img2imgInput, UnityEvent<Texture2D>[] responseEvents)
         {
             if (configInstance == null)
             {
@@ -120,61 +115,7 @@ namespace StableDiffusion
 
             string url = configInstance.address;
 
-            txt2imgInput.Initialize();
-            Texture2D[] textures = new Texture2D[0];
-
-            //Send request to server to generate a stable diffusion image
-            //Note:
-            //Normally we would be using Unity's UnityWebRequest.Post command like this:
-            //using (UnityWebRequest getReq = UnityWebRequest.Post($"http://{username}:{password}@141.100.233.171:4000/sdapi/v1/txt2img", postData))
-            //however, "For some reason UnityWebRequest applies URL encoding to POST message payloads." as seen here: https://forum.unity.com/threads/unitywebrequest-post-url-jsondata-sending-broken-json.414708/
-            //The solution is to first create it as a UnityWebRequest.Put request and to then change it to Post We then specify that it's a json and magically, it now works!
-
-            using UnityWebRequest getReq = UnityWebRequest.Put($"{url}/sdapi/v1/txt2img", JsonUtility.ToJson(txt2imgInput));
-            {
-                getReq.method = "POST";
-                getReq.SetRequestHeader("Content-Type", "application/json");
-
-                Debug.Log("SD: txt2img request Sent!");
-                yield return getReq.SendWebRequest();
-
-                //Handle HTTP error
-                if (getReq.result != UnityWebRequest.Result.Success)
-                {
-                    Debug.Log($"SD: txt2img request Failed: {getReq.result} {getReq.error}");
-                }
-                //Handle successful HTTP request
-                else
-                {
-                    Debug.Log("SD: txt2img request Complete!");
-                    // Access the response data from getReq.downloadHandler
-                    //Task<Texture2D[]> task = GetTexturesFromtxt2imgAsync(getReq.downloadHandler.text, txt2imgInput.rotate180);
-                    //yield return new WaitUntil(() => task.IsCompleted);
-                    //textures = task.Result;
-                    textures = GetTexturesFromtxt2img(getReq.downloadHandler.text, txt2imgInput);
-
-                    //if (!txt2imgInput.useExtra || (txt2imgInput.showExtra && txt2imgInput.useExtra && txt2imgInput.showSteps)) //set texture to output if we are not using extra, or if we are using extra and showing the progress steps
-                    Functions.ApplyTexture2dToOutputs(textures, renderers, responseEvents);
-                }
-            }
-
-            //if (txt2imgInput.showExtra && txt2imgInput.useExtra)
-            //{
-            //    yield return Img2Extras.ProcessExtraCoroutine(txt2imgInput.extraInput, textures, renderers, responseEvents);
-            //}
-        }
-
-        public async static Task<Texture2D[]> GenerateImagesTask(Txt2ImgPayload txt2imgInput)
-        {
-            if (configInstance == null)
-            {
-                Debug.LogError("Stable Diffusion Config doesn't exist! Please create one.");
-                return null;
-            }
-
-            string url = configInstance.address;
-
-            txt2imgInput.Initialize(); //update hidden values to their true values
+            img2imgInput.Initialize();
             Texture2D[] textures;
 
             //Send request to server to generate a stable diffusion image
@@ -184,50 +125,48 @@ namespace StableDiffusion
             //however, "For some reason UnityWebRequest applies URL encoding to POST message payloads." as seen here: https://forum.unity.com/threads/unitywebrequest-post-url-jsondata-sending-broken-json.414708/
             //The solution is to first create it as a UnityWebRequest.Put request and to then change it to Post We then specify that it's a json and magically, it now works!
 
-            using UnityWebRequest getReq = UnityWebRequest.Put($"{url}/sdapi/v1/txt2img", JsonUtility.ToJson(txt2imgInput));
+            using UnityWebRequest getReq = UnityWebRequest.Put($"{url}/sdapi/v1/img2img", JsonUtility.ToJson(img2imgInput));
             {
                 getReq.method = "POST";
                 getReq.SetRequestHeader("Content-Type", "application/json");
 
-                Debug.Log("SD: txt2img request Sent!");
-                UnityWebRequestAsyncOperation requestTask = getReq.SendWebRequest();
-
-                while (!requestTask.isDone)
-                    await Task.Yield();
+                Debug.Log($"{logPrefix} request Sent!");
+                yield return getReq.SendWebRequest();
 
                 //Handle HTTP error
                 if (getReq.result != UnityWebRequest.Result.Success)
                 {
-                    Debug.Log($"SD: txt2img request Failed: {getReq.result} {getReq.error}");
-                    return null;
+                    Debug.Log($"{logPrefix} request Failed: {getReq.result} {getReq.error}");
                 }
                 //Handle successful HTTP request
                 else
                 {
-                    Debug.Log("SD: txt2img request Complete!");
-                    // Access the response data from getReq.downloadHandler
-                    //Task<Texture2D[]> task = GetTexturesFromtxt2imgAsync(getReq.downloadHandler.text, txt2imgInput.rotate180);
+                    Debug.Log($"{logPrefix} request Complete!");
+                    //Task<Texture2D[]> task = GetTexturesFromimg2imgAsync(getReq.downloadHandler.text, img2imgInput.rotate180);
                     //yield return new WaitUntil(() => task.IsCompleted);
                     //textures = task.Result;
-                    textures = GetTexturesFromtxt2img(getReq.downloadHandler.text, txt2imgInput);
+                    textures = GetTexturesFromimg2img(getReq.downloadHandler.text, img2imgInput);
+
+                    //if (!img2imgInput.useExtra || (img2imgInput.showExtra && img2imgInput.useExtra && img2imgInput.showSteps)) //set texture to output if we are not using extra, or if we are using extra and showing the progress steps
+                    Functions.ApplyTexture2dToOutputs(textures, responseEvents);
                 }
             }
 
-            return textures;
+            //if (txt2imgInput.showExtra && txt2imgInput.useExtra)
+            //{
+            //    yield return Img2Extras.ProcessExtraCoroutine(txt2imgInput.extraInput, textures, renderers, responseEvents);
+            //}
         }
 
 
-
-
-        //Convert a json string to Sprite
-        private static Texture2D[] GetTexturesFromtxt2img(string json, Txt2ImgPayload input)
+        private static Texture2D[] GetTexturesFromimg2img(string json, Img2ImgPayload input)
         {
             List<Texture2D> texture2Ds = new List<Texture2D>();
-            Txt2ImgContainer container = JsonUtility.FromJson<Txt2ImgContainer>(json);
+            Img2ImgContainer container = JsonUtility.FromJson<Img2ImgContainer>(json);
 
             for (int i = 0; i < container.images.Length; i++)
             {
-                byte[] b64_bytes = Convert.FromBase64String(container.images[i]); //convert the image's strings to bytes.
+                byte[] b64_bytes = Convert.FromBase64String(container.images[i]); //convert theimage's strings to bytes.
 
                 if (input.saveImageToFile)
                 {
@@ -236,7 +175,7 @@ namespace StableDiffusion
                         Directory.CreateDirectory(path);
 
                     path += $"{DateTime.Now.ToString("yyyy-dd-M-HHmmss")}_{i}.png";
-                    Debug.Log($"SD: Saving image to {path}");
+                    Debug.Log($"{logPrefix} Saving image to {path}");
                     File.WriteAllBytes(path, b64_bytes);
                 }
 
@@ -244,6 +183,7 @@ namespace StableDiffusion
                 Texture2D tex = new Texture2D(1, 1);
                 tex.LoadImage(b64_bytes);
 
+                //if (StableDiffusionConfig.instance.fixRotation)
                 if (input.rotate180)
                 {
                     //reverse the array to rotate the image 180?as it is otherwise imported upside down
@@ -259,9 +199,9 @@ namespace StableDiffusion
         }
 
         //Convert a json string to Sprite
-        private static async Task<Texture2D[]> GetTexturesFromtxt2imgAsync(string json, bool rotate180)
+        private static async Task<Texture2D[]> GetTexturesFromimg2imgAsync(string json, bool rotate180)
         {
-            Txt2ImgContainer container = JsonUtility.FromJson<Txt2ImgContainer>(json);
+            Img2ImgContainer container = JsonUtility.FromJson<Img2ImgContainer>(json);
             Texture2D[] texture2Ds = new Texture2D[container.images.Length];
 
             for (int i = 0; i < texture2Ds.Length; i++)
