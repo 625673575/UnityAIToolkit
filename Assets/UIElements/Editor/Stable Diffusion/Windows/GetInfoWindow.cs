@@ -1,6 +1,7 @@
 using System.Linq;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
+using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
 
@@ -9,17 +10,15 @@ namespace StableDiffusion
     public class GetInfoWindow : EditorWindow
     {
         public VisualTreeAsset MainWindow;
-        private GroupBox imageBox;
         private ObjectField setupAssetObjectField;
         private DropdownField apiDropdownField;
         private Button getInfoButton;
         private TextField infoTextField;
-
+        private TreeView treeView;
         private void CreateGUI()
         {
             var window = MainWindow.Instantiate();
             rootVisualElement.Add(window);
-            imageBox = window.Q<GroupBox>(nameof(imageBox));
 
             setupAssetObjectField = window.Q<ObjectField>(nameof(setupAssetObjectField));
             apiDropdownField = window.Q<DropdownField>(nameof(apiDropdownField));
@@ -28,8 +27,8 @@ namespace StableDiffusion
             getInfoButton = window.Q<Button>(nameof(getInfoButton));
             getInfoButton.RegisterCallback<ClickEvent>(OnGetInfoClicked);
             infoTextField = window.Q<TextField>(nameof(infoTextField));
+            treeView = window.Q<TreeView>();
         }
-
         private void OnGetInfoClicked(ClickEvent evt)
         {
             if (setupAssetObjectField.value == null)
@@ -43,12 +42,15 @@ namespace StableDiffusion
 
         private void OnGetInfo(string json)
         {
+            if(string.IsNullOrWhiteSpace(json))
+                return;
+            treeView.LoadJson(json, apiDropdownField.value, Debug.Log);
             infoTextField.value = json;
         }
 
         private void OnDestroy()
         {
-            getInfoButton.UnregisterCallback<ClickEvent>(OnGetInfoClicked);
+            getInfoButton?.UnregisterCallback<ClickEvent>(OnGetInfoClicked);
         }
     }
 }

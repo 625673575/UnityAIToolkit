@@ -10,7 +10,7 @@ public class Img2ImgWindow : EditorWindow
 {
     public VisualTreeAsset MainWindow;
     private GroupBox imageBox;
-    private ObjectField inputTexture;
+    private DragDropImage inputTexture;
     private Button img2ImgButton;
     private TextField promptText,negativePromptText;
     private SliderInt stepSliderInt;
@@ -22,7 +22,7 @@ public class Img2ImgWindow : EditorWindow
         rootVisualElement.Add(window);
         imageBox = window.Q<GroupBox>(nameof(imageBox));
 
-        inputTexture = window.Q<ObjectField>(nameof(inputTexture));
+        inputTexture = window.Q<DragDropImage>(nameof(inputTexture));
         img2ImgButton = window.Q<Button>(nameof(img2ImgButton));
         img2ImgButton.RegisterCallback<ClickEvent>(OnTxt2ImgClicked);
 
@@ -41,7 +41,7 @@ public class Img2ImgWindow : EditorWindow
         }
         Img2ImgPayload payload = new()
         {
-            images = new Texture2D[] {inputTexture.value as Texture2D},
+            images = new Texture2D[] { inputTexture.value},
             prompt = promptText.value,
             negative_prompt = negativePromptText.value,
             steps = stepSliderInt.value,

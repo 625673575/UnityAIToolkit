@@ -31,18 +31,7 @@ namespace StableDiffusion
             launchFile = window.Q<TextField>(nameof(launchFile));
             address = window.Q<TextField>(nameof(address));
             setupAssetObjectField.RegisterValueChangedCallback(OnAssetValueChange);
-            if (setupAssetObjectField.value == null)
-            {
-                string path = EditorPrefs.GetString(EditorPrefKeys.StableDifussionSetupAssetPath);
-                if (path != null)
-                {
-                    LaunchSetup setupAsset = AssetDatabase.LoadAssetAtPath<LaunchSetup>(path);
-                    if (setupAsset != null)
-                    {
-                        setupAssetObjectField.value = setupAsset;
-                    }
-                }
-            }
+            OnAssetValueChange(setupAssetObjectField.value as LaunchSetup);
             runServeButton.RegisterCallback<ClickEvent>(OnRunServeClicked);
         }
 
@@ -68,24 +57,23 @@ namespace StableDiffusion
         {
             if (evt.newValue != null)
             {
-                string assetPath = AssetDatabase.GetAssetPath(evt.newValue);
-                if (assetPath != null)
-                {
-                    EditorPrefs.SetString(EditorPrefKeys.StableDifussionSetupAssetPath, assetPath);
-                }
                 LaunchSetup setup = evt.newValue as LaunchSetup;
-                if (setup != null)
-                {
-                    Setup = setup;
-                    setupAssetGroupBox.visible = true;
-                    installationDirectory.value = setup.installationDirectory;
-                    launchFile.value = setup.launchFile;
-                    address.value = setup.address;
-                }
-                else
-                {
-                    setupAssetGroupBox.visible = false;
-                }
+                OnAssetValueChange(setup);
+            }
+            else
+            {
+                setupAssetGroupBox.visible = false;
+            }
+        }
+        void OnAssetValueChange(LaunchSetup setup)
+        {
+            if (setup != null)
+            {
+                Setup = setup;
+                setupAssetGroupBox.visible = true;
+                installationDirectory.value = setup.installationDirectory;
+                launchFile.value = setup.launchFile;
+                address.value = setup.address;
             }
             else
             {
@@ -94,8 +82,8 @@ namespace StableDiffusion
         }
         private void OnDestroy()
         {
-            setupAssetObjectField.UnregisterValueChangedCallback(OnAssetValueChange);
-            runServeButton.UnregisterCallback<ClickEvent>(OnRunServeClicked);
+            setupAssetObjectField?.UnregisterValueChangedCallback(OnAssetValueChange);
+            runServeButton?.UnregisterCallback<ClickEvent>(OnRunServeClicked);
         }
     }
 }

@@ -1,6 +1,7 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/UIElements/Style/DragAndDrop.uss?fileID=7433441132597879392&amp;guid=e01ea704b9e4e504c866da2fa8f7d8db&amp;type=3#DragAndDrop" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;">
-        <uie:ObjectField label="Input Texture" type="UnityEngine.Texture2D, UnityEngine.CoreModule" name="inputTexture" style="height: 24px;" />
+        <DragDropImage text="drag&amp;drop image here or click to select" name="inputTexture" />
         <ui:IntegerField label="Resize Mode" value="0" name="resizeModeIntegerField" />
         <ui:FloatField label="Upscaling" value="2" name="upscalingFloatField" />
         <ui:Button text="Img2Img" display-tooltip-when-elided="true" name="img2ImgButton" />

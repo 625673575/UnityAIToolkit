@@ -49,6 +49,6 @@ public class Txt2ImgWindow : EditorWindow
     }
     private void OnDestroy()
     {
-        txt2ImgButton.UnregisterCallback<ClickEvent>(OnTxt2ImgClicked);
+        txt2ImgButton?.UnregisterCallback<ClickEvent>(OnTxt2ImgClicked);
     }
 }

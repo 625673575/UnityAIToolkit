@@ -11,7 +11,7 @@ public class ExtraWindow : EditorWindow
 {
     public VisualTreeAsset MainWindow;
     private GroupBox imageBox;
-    private ObjectField inputTexture;
+    private DragDropImage inputTexture;
     private IntegerField resizeModeIntegerField;
     private FloatField upscalingFloatField;
     private Button img2ImgButton;
@@ -22,7 +22,7 @@ public class ExtraWindow : EditorWindow
         rootVisualElement.Add(window);
         imageBox = window.Q<GroupBox>(nameof(imageBox));
 
-        inputTexture = window.Q<ObjectField>(nameof(inputTexture));
+        inputTexture = window.Q<DragDropImage>(nameof(inputTexture));
         img2ImgButton = window.Q<Button>(nameof(img2ImgButton));
         img2ImgButton.RegisterCallback<ClickEvent>(OnTxt2ImgClicked);
 
@@ -37,7 +37,7 @@ public class ExtraWindow : EditorWindow
             EditorUtility.DisplayDialog("Error", "Please select input texture", "OK");
             return;
         }
-        Texture2D image = inputTexture.value as Texture2D;
+        Texture2D image = inputTexture.value;
         ExtrasPayload payload = new()
         {
             image = Convert.ToBase64String(image.EncodeToPNG()),
@@ -60,6 +60,6 @@ public class ExtraWindow : EditorWindow
     }
     private void OnDestroy()
     {
-        img2ImgButton.UnregisterCallback<ClickEvent>(OnTxt2ImgClicked);
+        img2ImgButton?.UnregisterCallback<ClickEvent>(OnTxt2ImgClicked);
     }
 }
