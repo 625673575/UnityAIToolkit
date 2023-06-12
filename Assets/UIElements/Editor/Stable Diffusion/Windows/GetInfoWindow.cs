@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.UIElements;
 using UnityEngine.UIElements;
+using System;
+using System.Collections;
 
 namespace StableDiffusion
 {
@@ -44,8 +46,15 @@ namespace StableDiffusion
         {
             if(string.IsNullOrWhiteSpace(json))
                 return;
-            treeView.LoadJson(json, apiDropdownField.value, Debug.Log);
+            treeView.LoadJson(json, apiDropdownField.value,true, OnTreeItemSelect);
             infoTextField.value = json;
+        }
+
+        private void OnTreeItemSelect(object obj)
+        {
+            IList objList = (IList)obj;
+            foreach(var item in objList) { Debug.Log(item); }
+            
         }
 
         private void OnDestroy()
