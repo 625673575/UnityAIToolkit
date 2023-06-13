@@ -46,7 +46,8 @@ namespace StableDiffusion
         {
             if(string.IsNullOrWhiteSpace(json))
                 return;
-            treeView.LoadJson(json, apiDropdownField.value,true, OnTreeItemSelect);
+            json = treeView.LoadJson(json, apiDropdownField.value,true, OnTreeItemSelect);
+            GUIUtility.systemCopyBuffer = json;
             infoTextField.value = json;
         }
 

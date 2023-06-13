@@ -2,7 +2,8 @@
     "name": "AIToolKit.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:3c6c22a9389ab904986e13b196cd2d13"
+        "GUID:3c6c22a9389ab904986e13b196cd2d13",
+        "GUID:39285b86a935d3a499a223112ae8df78"
     ],
     "includePlatforms": [
         "Editor"

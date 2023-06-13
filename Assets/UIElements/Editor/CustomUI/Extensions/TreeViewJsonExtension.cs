@@ -6,7 +6,7 @@ using UnityEngine;
 
 public static class TreeViewJsonExtension
 {
-    public static void LoadJson(this TreeView treeView, string json, string rootName = "root", bool fixPath = true, System.Action<object> onChosen = null)
+    public static string LoadJson(this TreeView treeView, string json, string rootName = "root", bool fixPath = true, System.Action<object> onChosen = null)
     {
         void AddObjectNodes(JObject @object, string name, ref int itemIndex, List<TreeViewItemData<string>> parent)
         {
@@ -90,6 +90,6 @@ public static class TreeViewJsonExtension
         {
             Debug.LogError(e.Message);
         }
-
+        return json;
     }
 }

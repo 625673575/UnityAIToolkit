@@ -33,4 +33,10 @@ public static class OpenConfigWindow
         var wnd = EditorWindow.GetWindow<GetInfoWindow>();
         wnd.titleContent = new GUIContent("StableDiffusion Info");
     }
+    [MenuItem("AI Toolkit/Others/JsonToCSharp")]
+    public static void JsonToCSharp()
+    {
+        var wnd = EditorWindow.GetWindow<JsonToCSharpWindow>();
+        wnd.titleContent = new GUIContent("Json2CSharp");
+    }
 }

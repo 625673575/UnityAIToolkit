@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement name="Root" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:GroupBox style="flex-direction: row; height: 36px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; align-items: center;">
+            <ui:Toggle label="Use Pascal Case" name="usePascalCase" />
+            <ui:Toggle label="Output as Property" name="optMemberProps" value="false" />
+            <ui:Toggle label="Output Immutable Class" name="optTypesImmutablePoco" value="false" />
+            <ui:Toggle label="Output Mutable Class" name="optTypesMutablePoco" value="true" />
+        </ui:GroupBox>
+        <ui:VisualElement name="textArea" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; height: auto; width: auto; align-self: auto;">
+            <ScrollTextField mode="VerticalAndHorizontal" name="jsonInputTextField" focusable="true" picking-mode="Ignore" style="width: 50%; flex-direction: column;" />
+            <ScrollTextField mode="VerticalAndHorizontal" name="csharpOutputTextField" focusable="true" picking-mode="Ignore" style="width: 50%; flex-direction: column;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
