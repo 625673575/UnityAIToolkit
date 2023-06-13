@@ -3,10 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json.Linq;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using Xamasoft.JsonClassGenerator.Models;
 
 namespace Xamasoft.JsonClassGenerator

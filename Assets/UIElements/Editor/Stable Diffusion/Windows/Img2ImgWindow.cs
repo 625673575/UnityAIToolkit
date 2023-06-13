@@ -1,7 +1,6 @@
 using StableDiffusion;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -9,7 +8,7 @@ using UnityEngine.UIElements;
 public class Img2ImgWindow : EditorWindow
 {
     public VisualTreeAsset MainWindow;
-    private GroupBox imageBox;
+    public ImagePreviewBar imagePreviewBar;
     private DragDropImage inputTexture;
     private Button img2ImgButton;
     private TextField promptText,negativePromptText;
@@ -20,8 +19,8 @@ public class Img2ImgWindow : EditorWindow
     {
         var window = MainWindow.Instantiate();
         rootVisualElement.Add(window);
-        imageBox = window.Q<GroupBox>(nameof(imageBox));
 
+        imagePreviewBar = new ImagePreviewBar(window.Q(nameof(imagePreviewBar)));
         inputTexture = window.Q<DragDropImage>(nameof(inputTexture));
         img2ImgButton = window.Q<Button>(nameof(img2ImgButton));
         img2ImgButton.RegisterCallback<ClickEvent>(OnTxt2ImgClicked);
@@ -55,7 +54,7 @@ public class Img2ImgWindow : EditorWindow
 
     void OnReceiveTexture2D(Texture2D texture)
     {
-        imageBox.style.backgroundImage = texture;
+        imagePreviewBar.Add(texture);
     }
     private void OnDestroy()
     {

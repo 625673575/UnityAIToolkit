@@ -6,6 +6,7 @@ MonoImporter:
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
   - MainWindow: {fileID: 9197481963319205126, guid: c07fb7fcfd2325c46a447560eb8986df, type: 3}
+  - ImagePreviewBarComponent: {fileID: 9197481963319205126, guid: 88af2caf8bdd6d54bbe9e20cc1dbcdc3, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

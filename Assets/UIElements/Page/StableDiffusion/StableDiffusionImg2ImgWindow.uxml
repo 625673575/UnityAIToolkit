@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Template name="ImagePreviewBar" src="project://database/Assets/UIElements/Page/Components/ImagePreviewBar.uxml?fileID=9197481963319205126&amp;guid=88af2caf8bdd6d54bbe9e20cc1dbcdc3&amp;type=3#ImagePreviewBar" />
     <Style src="project://database/Assets/UIElements/Style/DragAndDrop.uss?fileID=7433441132597879392&amp;guid=e01ea704b9e4e504c866da2fa8f7d8db&amp;type=3#DragAndDrop" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; height: 100%;">
         <DragDropImage name="inputTexture" />
@@ -7,6 +8,6 @@
         <ui:SliderInt picking-mode="Ignore" label="Step" value="50" high-value="500" name="stepSliderInt" low-value="20" show-input-field="true" />
         <ui:Slider picking-mode="Ignore" label="Denoising Strength" value="0.95" high-value="1" name="denoisingStrengthSlider" show-input-field="true" />
         <ui:Button text="Img2Img" display-tooltip-when-elided="true" name="img2ImgButton" />
-        <ui:GroupBox name="imageBox" style="background-image: none; height: 512px; border-left-color: rgb(0, 197, 253); border-right-color: rgb(0, 197, 253); border-top-color: rgb(0, 197, 253); border-bottom-color: rgb(0, 197, 253); width: 512px;" />
+        <ui:Instance template="ImagePreviewBar" name="imagePreviewBar" />
     </ui:VisualElement>
 </ui:UXML>

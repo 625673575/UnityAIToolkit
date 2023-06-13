@@ -1,4 +1,3 @@
-using Codice.CM.Common;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -10,9 +9,6 @@ public class HistoricObjectField : ObjectField
     {
     }
 
-    //
-    // ժҪ:
-    //     Defines UxmlTraits for the ObjectField.
     public new class UxmlTraits : ObjectField.UxmlTraits
     {
         private UxmlStringAttributeDescription m_editorPrefKey = new UxmlStringAttributeDescription

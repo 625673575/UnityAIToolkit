@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:GroupBox name="imageBox" style="width: 512px; height: 512px; align-items: auto; align-self: center; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(215, 238, 0); border-right-color: rgb(215, 238, 0); border-top-color: rgb(215, 238, 0); border-bottom-color: rgb(215, 238, 0);" />
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+            <ui:ScrollView name="scrollGrid" mode="Horizontal" horizontal-scroller-visibility="AlwaysVisible" vertical-scroller-visibility="Auto" style="height: 150px; -unity-text-align: upper-center; border-left-color: rgb(0, 195, 53); border-right-color: rgb(0, 195, 53); border-top-color: rgb(0, 195, 53); border-bottom-color: rgb(0, 195, 53); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

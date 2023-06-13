@@ -38,5 +38,6 @@ public static class OpenConfigWindow
     {
         var wnd = EditorWindow.GetWindow<JsonToCSharpWindow>();
         wnd.titleContent = new GUIContent("Json2CSharp");
+
     }
 }

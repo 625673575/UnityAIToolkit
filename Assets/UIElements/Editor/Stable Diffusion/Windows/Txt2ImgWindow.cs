@@ -1,4 +1,5 @@
 using StableDiffusion;
+using System.Linq;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
@@ -8,17 +9,17 @@ using UnityEngine.UIElements;
 public class Txt2ImgWindow : EditorWindow
 {
     public VisualTreeAsset MainWindow;
-    private GroupBox imageBox;
+    public ImagePreviewBar imagePreviewBar;
     private Button txt2ImgButton;
-    private TextField promptText,negativePromptText;
+    private TextField promptText, negativePromptText;
     private SliderInt stepSliderInt;
     private Slider denoisingStrengthSlider;
-    
+
     private void CreateGUI()
     {
         var window = MainWindow.Instantiate();
         rootVisualElement.Add(window);
-        imageBox = window.Q<GroupBox>(nameof(imageBox));
+        imagePreviewBar = new ImagePreviewBar(window.Q(nameof(imagePreviewBar)));
         txt2ImgButton = window.Q<Button>(nameof(txt2ImgButton));
         txt2ImgButton.RegisterCallback<ClickEvent>(OnTxt2ImgClicked);
 
@@ -26,6 +27,7 @@ public class Txt2ImgWindow : EditorWindow
         negativePromptText = window.Q<TextField>(nameof(negativePromptText));
         stepSliderInt = window.Q<SliderInt>(nameof(stepSliderInt));
         denoisingStrengthSlider = window.Q<Slider>(nameof(denoisingStrengthSlider));
+
     }
 
     private void OnTxt2ImgClicked(ClickEvent evt)
@@ -45,7 +47,7 @@ public class Txt2ImgWindow : EditorWindow
 
     void OnReceiveTexture2D(Texture2D texture)
     {
-        imageBox.style.backgroundImage = texture;
+        imagePreviewBar.Add(texture);
     }
     private void OnDestroy()
     {
