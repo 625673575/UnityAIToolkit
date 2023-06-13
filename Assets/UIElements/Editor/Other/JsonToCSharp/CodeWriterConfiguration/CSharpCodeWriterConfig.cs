@@ -27,6 +27,7 @@ namespace Xamasoft.JsonClassGenerator.CodeWriterConfiguration
             CollectionType = OutputCollectionType.MutableList;
             AlwaysUseNullables = false;
             NullValueHandlingIgnore = false;
+            AddSystemSerializable = false;
         }
 
         public CSharpCodeWriterConfig(
@@ -57,6 +58,7 @@ namespace Xamasoft.JsonClassGenerator.CodeWriterConfiguration
         public bool UseNestedClasses { get; set; }
         public JsonLibrary AttributeLibrary { get; set; }
         public bool NullValueHandlingIgnore { get; set; }
+        public bool AddSystemSerializable { get; set; }
         public JsonPropertyAttributeUsage AttributeUsage { get; set; }
         public OutputTypes OutputType { get; set; }
         public OutputMembers OutputMembers { get; set; }

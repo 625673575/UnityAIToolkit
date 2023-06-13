@@ -16,6 +16,7 @@ public class JsonToCSharpWindow : EditorWindow
     public Toggle optMemberProps;
     public Toggle optTypesImmutablePoco;
     public Toggle optTypesMutablePoco;
+    public Toggle optAddSystemSerializable;
 
     private bool preventReentrancy = false;
     private void CreateGUI()
@@ -29,12 +30,13 @@ public class JsonToCSharpWindow : EditorWindow
         optMemberProps = window.Q<Toggle>(nameof(optMemberProps));
         optTypesImmutablePoco = window.Q<Toggle>(nameof(optTypesImmutablePoco));
         optTypesMutablePoco = window.Q<Toggle>(nameof(optTypesMutablePoco));
-        jsonInputTextField.textField.RegisterValueChangedCallback(ev => { GenerateCode(); });
-        var toggles = new Toggle[] { usePascalCase, optMemberProps, optTypesImmutablePoco, optTypesMutablePoco };
+        optAddSystemSerializable = window.Q<Toggle>(nameof(optAddSystemSerializable));
+        var toggles = new Toggle[] { usePascalCase, optMemberProps, optTypesImmutablePoco, optTypesMutablePoco,optAddSystemSerializable };
         foreach (var toggle in toggles)
         {
             toggle.RegisterValueChangedCallback(ev => { GenerateCode(); });
         }
+        jsonInputTextField.textField.RegisterValueChangedCallback(ev => { GenerateCode(); });
     }
 
     private void GenerateCode()
@@ -53,12 +55,12 @@ public class JsonToCSharpWindow : EditorWindow
         }
     }
 
-    public CSharpCodeWriterConfig writerConfig { get; set; } = new CSharpCodeWriterConfig();
-    private void ConfigureGenerator(JsonClassGenerator config)
+    public CSharpCodeWriterConfig writerConfig = new CSharpCodeWriterConfig();
+    private void ConfigureGenerator()
     {
         writerConfig.UsePascalCase = usePascalCase.value;
         writerConfig.AttributeLibrary = JsonLibrary.NewtonsoftJson;
-
+        writerConfig.AddSystemSerializable = optAddSystemSerializable.value;
         if (optMemberProps.value)
         {
             writerConfig.OutputMembers = OutputMembers.AsProperties;
@@ -92,7 +94,7 @@ public class JsonToCSharpWindow : EditorWindow
 
         JsonClassGenerator generator = new JsonClassGenerator();
         generator.CodeWriter = new CSharpCodeWriter(writerConfig);
-        ConfigureGenerator(generator);
+        ConfigureGenerator();
 
         try
         {

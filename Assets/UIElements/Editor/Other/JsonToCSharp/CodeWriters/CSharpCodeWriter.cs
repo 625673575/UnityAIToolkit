@@ -172,13 +172,16 @@ namespace Xamasoft.JsonClassGenerator.CodeWriters
         {
             sw.AppendLine("}");
         }
-
+        
         public void WriteClass(StringBuilder sw, JsonType type)
         {
             string indentTypes   = GetTypeIndent(type.IsRoot);
             string indentMembers = indentTypes   + "    ";
             string indentBodies  = indentMembers + "    ";
-
+            if(config.AddSystemSerializable)
+            {
+                sw.AppendLine(indentTypes + "[System.Serializable]");
+            }
             const string visibility = "public";
 
             var className = type.AssignedName;

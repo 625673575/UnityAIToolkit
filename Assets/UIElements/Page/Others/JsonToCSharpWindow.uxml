@@ -5,6 +5,7 @@
             <ui:Toggle label="Output as Property" name="optMemberProps" value="false" />
             <ui:Toggle label="Output Immutable Class" name="optTypesImmutablePoco" value="false" />
             <ui:Toggle label="Output Mutable Class" name="optTypesMutablePoco" value="true" />
+            <ui:Toggle label="System Serializable" name="optAddSystemSerializable" value="true" />
         </ui:GroupBox>
         <ui:VisualElement name="textArea" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; height: auto; width: auto; align-self: auto;">
             <ScrollTextField mode="VerticalAndHorizontal" name="jsonInputTextField" focusable="true" picking-mode="Ignore" style="width: 50%; flex-direction: column;" />
