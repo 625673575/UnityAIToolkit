@@ -102,18 +102,17 @@ namespace StableDiffusion
     }
     public static class Image2Image
     {
-        private static LaunchSetup configInstance => SetupWindow.Setup;
         private const string logPrefix = "SD: img2img";
 
-        public static IEnumerator GenerateImagesCoroutine(Img2ImgPayload img2imgInput, UnityEvent<Texture2D>[] responseEvents)
+        public static IEnumerator GenerateImagesCoroutine(LaunchSetup setup, Img2ImgPayload img2imgInput, UnityEvent<Texture2D>[] responseEvents)
         {
-            if (configInstance == null)
+            if (setup == null)
             {
                 Debug.LogError("Stable Diffusion Config doesn't exist! Please create one.");
                 yield break;
             }
 
-            string url = configInstance.address;
+            string url = setup.address;
 
             img2imgInput.Initialize();
             Texture2D[] textures;

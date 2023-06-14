@@ -11,14 +11,13 @@ namespace StableDiffusion
 
     public static class ImageExtra
     {
-        private static LaunchSetup configInstance => SetupWindow.Setup;
         private const string logPrefix = "SD: extra-single-image";
-        public static IEnumerator ProcessExtraCoroutine(ExtrasPayload extraInput, Texture2D[] textures, UnityEvent<Texture2D>[] responseEvents)
+        public static IEnumerator ProcessExtraCoroutine(LaunchSetup setup, ExtrasPayload extraInput, Texture2D[] textures, UnityEvent<Texture2D>[] responseEvents)
         {
             Texture2D[] upscalingTextures = new Texture2D[textures.Length];
             for (int i = 0; i < textures.Length; i++)
             {
-                string url = configInstance.address;
+                string url = setup.address;
 
                 string json = JsonUtility.ToJson(extraInput);
                 using UnityWebRequest getExtras = UnityWebRequest.Put($"{url}/sdapi/v1/extra-single-image", json);
@@ -46,9 +45,9 @@ namespace StableDiffusion
             yield return null;
         }
 
-        public async static Task<Texture2D> ProcessExtraTask(ExtrasPayload extraInput, Texture2D texture)
+        public async static Task<Texture2D> ProcessExtraTask(LaunchSetup setup, ExtrasPayload extraInput, Texture2D texture)
         {
-            string url = configInstance.address;
+            string url = setup.address;
 
             extraInput.image = Convert.ToBase64String(texture.EncodeToPNG());
             string json = JsonUtility.ToJson(extraInput);
@@ -116,8 +115,6 @@ namespace StableDiffusion
         public int resize_mode = 1;
         [Label("Resize")]
         public float upscaling_resize = 2;
-        public float upscaling_resize_w = 0;
-        public float upscaling_resize_h = 0;
         public string upscaler_1 = "None";
 
         #region rembg extension (Remove Background)

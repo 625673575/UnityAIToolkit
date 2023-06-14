@@ -103,8 +103,6 @@ namespace StableDiffusion
     }
     public static class Text2Image
     {
-        private static LaunchSetup configInstance => SetupWindow.Setup;
-
         private static Texture2D[] GetTexturesFromtxt2img(string json, Txt2ImgPayload input)
         {
             List<Texture2D> texture2Ds = new List<Texture2D>();
@@ -175,15 +173,15 @@ namespace StableDiffusion
             }
             return texture2Ds;
         }
-        public static IEnumerator GenerateImagesCoroutine(Txt2ImgPayload txt2imgInput,UnityEvent<Texture2D>[] responseEvents)
+        public static IEnumerator GenerateImagesCoroutine(LaunchSetup setup, Txt2ImgPayload txt2imgInput,UnityEvent<Texture2D>[] responseEvents)
         {
-            if (configInstance == null)
+            if (setup == null)
             {
                 Debug.LogError("Stable Diffusion Config doesn't exist! Please create one.");
                 yield break;
             }
 
-            string url = configInstance.address;
+            string url = setup.address;
             txt2imgInput.Initialize();
             Texture2D[] textures;
 

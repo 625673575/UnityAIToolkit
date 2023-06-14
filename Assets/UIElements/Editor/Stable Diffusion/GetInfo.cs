@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
+using UnityEngine.UIElements;
 
 namespace StableDiffusion
 {
@@ -45,6 +46,40 @@ namespace StableDiffusion
             }
             yield return null;
         }
+        public static IEnumerator GetProcessInfoCoroutine(string url, System.Action<Progress> action)
+        {
+            string api = "/sdapi/v1/progress";
+            float percent = 0;
+            int percentZeroCount = 0;
+            while (percent < 1.0 && percentZeroCount < 5)
+            {
+                using UnityWebRequest getExtras = UnityWebRequest.Put(url + api, new byte[0] { });
+                {
+                    getExtras.method = "GET";
+                    getExtras.SetRequestHeader("Content-Type", "application/json");
 
+                    yield return getExtras.SendWebRequest();
+
+                    if (getExtras.result != UnityWebRequest.Result.Success)
+                    {
+                        Debug.LogError($"{api} request Failed: {getExtras.result} {getExtras.error}");
+                    }
+                    else
+                    {
+                        string responseJsonData = getExtras.downloadHandler.text;
+
+                        Progress progress = JsonUtility.FromJson<Progress>(responseJsonData);
+                        percent = (float)progress.progress;
+                        action(progress);
+                        if (percent == 0)
+                        {
+                            percentZeroCount++;
+                            yield return new WaitForSeconds(0.5f);
+                        }
+                    }
+                }
+            }
+            //progressBar.value = 1.0f;
+        }
     }
 }

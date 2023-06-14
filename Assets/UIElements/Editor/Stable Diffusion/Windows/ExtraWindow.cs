@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 public class ExtraWindow : EditorWindow
 {
     public VisualTreeAsset MainWindow;
+    private ObjectField setupAssetObjectField;
     private GroupBox imageBox;
     private DragDropImage inputTexture;
     private IntegerField resizeModeIntegerField;
@@ -20,6 +21,7 @@ public class ExtraWindow : EditorWindow
     {
         var window = MainWindow.Instantiate();
         rootVisualElement.Add(window);
+        setupAssetObjectField = window.Q<ObjectField>(nameof(setupAssetObjectField));
         imageBox = window.Q<GroupBox>(nameof(imageBox));
 
         inputTexture = window.Q<DragDropImage>(nameof(inputTexture));
@@ -32,6 +34,12 @@ public class ExtraWindow : EditorWindow
 
     private void OnTxt2ImgClicked(ClickEvent evt)
     {
+        if (setupAssetObjectField.value == null)
+        {
+            EditorUtility.DisplayDialog("Error", "Please select input texture", "OK");
+            return;
+        }
+        var setupAsset = setupAssetObjectField.value as LaunchSetup;
         if (inputTexture.value == null)
         {
             EditorUtility.DisplayDialog("Error", "Please select input texture", "OK");
@@ -48,7 +56,7 @@ public class ExtraWindow : EditorWindow
         UnityEvent<Texture2D> receiveTexEvent = new();
         receiveTexEvent.AddListener(OnReceiveTexture2D);
         UnityEvent<Texture2D>[] receiveTexEvents = { receiveTexEvent };
-        this.StartCoroutine(ImageExtra.ProcessExtraCoroutine(payload, new Texture2D[] { image }, receiveTexEvents));
+        this.StartCoroutine(ImageExtra.ProcessExtraCoroutine(setupAsset, payload, new Texture2D[] { image }, receiveTexEvents));
     }
 
     void OnReceiveTexture2D(Texture2D texture)

@@ -1,7 +1,7 @@
 using StableDiffusion;
-using System.Linq;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UIElements;
@@ -9,16 +9,19 @@ using UnityEngine.UIElements;
 public class Txt2ImgWindow : EditorWindow
 {
     public VisualTreeAsset MainWindow;
+    private ObjectField setupAssetObjectField;
     public ImagePreviewBar imagePreviewBar;
     private Button txt2ImgButton;
     private TextField promptText, negativePromptText;
     private SliderInt stepSliderInt;
     private Slider denoisingStrengthSlider;
+    private ProgressBar progressBar;
 
     private void CreateGUI()
     {
         var window = MainWindow.Instantiate();
         rootVisualElement.Add(window);
+        setupAssetObjectField = window.Q<ObjectField>(nameof(setupAssetObjectField));
         imagePreviewBar = new ImagePreviewBar(window.Q(nameof(imagePreviewBar)));
         txt2ImgButton = window.Q<Button>(nameof(txt2ImgButton));
         txt2ImgButton.RegisterCallback<ClickEvent>(OnTxt2ImgClicked);
@@ -27,11 +30,17 @@ public class Txt2ImgWindow : EditorWindow
         negativePromptText = window.Q<TextField>(nameof(negativePromptText));
         stepSliderInt = window.Q<SliderInt>(nameof(stepSliderInt));
         denoisingStrengthSlider = window.Q<Slider>(nameof(denoisingStrengthSlider));
-
+        progressBar = window.Q<ProgressBar>(nameof(progressBar));
     }
-
+    int i = 0;
     private void OnTxt2ImgClicked(ClickEvent evt)
     {
+        if (setupAssetObjectField.value == null)
+        {
+            EditorUtility.DisplayDialog("Error", "Please select input texture", "OK");
+            return;
+        }
+        var setupAsset = setupAssetObjectField.value as LaunchSetup;
         Txt2ImgPayload payload = new()
         {
             prompt = promptText.value,
@@ -42,7 +51,8 @@ public class Txt2ImgWindow : EditorWindow
         UnityEvent<Texture2D> receiveTexEvent = new();
         receiveTexEvent.AddListener(OnReceiveTexture2D);
         UnityEvent<Texture2D>[] receiveTexEvents = { receiveTexEvent };
-        this.StartCoroutine(Text2Image.GenerateImagesCoroutine(payload, receiveTexEvents));
+        this.StartCoroutine(Text2Image.GenerateImagesCoroutine(setupAsset, payload, receiveTexEvents));
+        this.StartCoroutine(GetInfo.GetProcessInfoCoroutine(setupAsset.address,(progress)=>progressBar.value = (float)progress.progress));
     }
 
     void OnReceiveTexture2D(Texture2D texture)
