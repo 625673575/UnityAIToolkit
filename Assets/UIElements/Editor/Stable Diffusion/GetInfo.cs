@@ -1,32 +1,32 @@
-using StableDiffusion;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
-using UnityEngine.UIElements;
 
 namespace StableDiffusion
 {
     public static class GetInfo
     {
-        public static readonly Dictionary<string, string> ApiInfo = new Dictionary<string, string>(){
-        {"memory","/sdapi/v1/memory" },
-        {"scripts" , "/sdapi/v1/scripts" },
-        {"script-info","/sdapi/v1/script-info" },
-        {"sd-models", "/sdapi/v1/sd-models"},
-        {"samplers","/sdapi/v1/samplers" },
-        {"upscalers", "/sdapi/v1/upscalers"},
-        {"cmd-flags","/sdapi/v1/cmd-flags" },
-        {"options","/sdapi/v1/options" },
-        {"progress","/sdapi/v1/progress" }
+        public static readonly Dictionary<string, string> ApiInfo = new Dictionary<string, string>()
+        {
+            {"memory","/sdapi/v1/memory" },
+            {"scripts" , "/sdapi/v1/scripts" },
+            {"script-info","/sdapi/v1/script-info" },
+            {"sd-models", "/sdapi/v1/sd-models"},
+            {"samplers","/sdapi/v1/samplers" },
+            {"upscalers", "/sdapi/v1/upscalers"},
+            {"cmd-flags","/sdapi/v1/cmd-flags" },
+            {"options","/sdapi/v1/options" },
+            {"progress","/sdapi/v1/progress" },
+            {"loras","/sdapi/v1/loras" },
+            {"interrupt","/sdapi/v1/interrupt" }
         };
-        public static IEnumerator ProcessGetInfoCoroutine(string url, string api, string jsonParams, UnityAction<string> responseEvents)
+        public static IEnumerator ProcessGetInfoCoroutine(string url, string api, string jsonParams, UnityAction<string> responseEvents, bool postMethod = false)
         {
             using UnityWebRequest getExtras = UnityWebRequest.Put(url + api, jsonParams);
             {
-                getExtras.method = "GET";
+                getExtras.method = postMethod ? "POST" : "GET";
                 getExtras.SetRequestHeader("Content-Type", "application/json");
 
                 Debug.Log($"{api} request Sent!");
@@ -53,6 +53,7 @@ namespace StableDiffusion
             int percentZeroCount = 0;
             while (percent < 1.0 && percentZeroCount < 5)
             {
+                yield return new WaitForSeconds(0.2f);
                 using UnityWebRequest getExtras = UnityWebRequest.Put(url + api, new byte[0] { });
                 {
                     getExtras.method = "GET";
@@ -63,6 +64,7 @@ namespace StableDiffusion
                     if (getExtras.result != UnityWebRequest.Result.Success)
                     {
                         Debug.LogError($"{api} request Failed: {getExtras.result} {getExtras.error}");
+                        break;
                     }
                     else
                     {
@@ -79,7 +81,6 @@ namespace StableDiffusion
                     }
                 }
             }
-            //progressBar.value = 1.0f;
         }
     }
 }

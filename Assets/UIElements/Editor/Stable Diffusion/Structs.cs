@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace StableDiffusion
 {
     [System.Serializable]
@@ -22,6 +24,22 @@ namespace StableDiffusion
         public int sampling_step;
         public int sampling_steps;
     }
+    [System.Serializable]
+    public class UpscalingOption
+    {
+        public string name;
+        public string model_name;
+        public string model_path;
+        public object model_url;
+        public double scale;
+    }
+
+    [System.Serializable]
+    public class UpscalingOptions
+    {
+        public List<UpscalingOption> array;
+    }
+
 
 
 }

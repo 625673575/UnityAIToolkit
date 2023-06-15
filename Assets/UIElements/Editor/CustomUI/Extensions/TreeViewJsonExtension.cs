@@ -52,6 +52,7 @@ public static class TreeViewJsonExtension
                 var item = treeView.GetItemDataForIndex<string>(i);
                 (e as Label).text = item;
             };
+            treeView.fixedItemHeight = 14;
         }
         if (onChosen != null)
             treeView.selectionChanged += onChosen;

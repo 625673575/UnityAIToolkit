@@ -1,11 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class ScrollTextField : ScrollView
+public class ScrollGroupBox : ScrollView
 {
-    public new class UxmlFactory : UxmlFactory<ScrollTextField, UxmlTraits>
+    public new class UxmlFactory : UxmlFactory<ScrollGroupBox, UxmlTraits>
     {
     }
     public new class UxmlTraits : VisualElement.UxmlTraits
@@ -105,55 +107,37 @@ public class ScrollTextField : ScrollView
             scrollView.elasticity = m_Elasticity.GetValueFromBag(bag, cc);
         }
     }
-    public TextField textField { get; private set; }
-    public ScrollTextField() : base(ScrollViewMode.VerticalAndHorizontal)
+    public GroupBox groupBox { get; private set; }
+    public ScrollGroupBox() : base(ScrollViewMode.VerticalAndHorizontal)
     {
-        textField = new TextField() { value = "", label = "", focusable = true, multiline = true, pickingMode = PickingMode.Position };
-        //textField.style.flexWrap = Wrap.Wrap;
-        textField.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
+        groupBox = new GroupBox() { focusable = true};
+        groupBox.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
         {
-            evt.menu.AppendAction("Copy All", (x) =>
-            {
-                Debug.Log("Copy Text");
-                GUIUtility.systemCopyBuffer = textField.value;
-            });
-            evt.menu.AppendAction("Paste All", (x) =>
-            {
-                Debug.Log("Paste All");
-                textField.value = GUIUtility.systemCopyBuffer;
-            });
-            evt.menu.AppendAction("Clear", (x) =>
-            {
-                Debug.Log("Clear Text");
-                textField.value = string.Empty;
-            });
             evt.menu.AppendAction("Save", (x) =>
             {
-                string assetPath = EditorUtility.SaveFilePanelInProject("save", "JsonStruct", "cs", "Save the code");
-                if (!string.IsNullOrEmpty(assetPath))
-                {
-                    Debug.Log("Save to " + assetPath);
-                    File.WriteAllText(assetPath, textField.value);
-                }
+                save();
             });
         }));
-        textField.RegisterCallback<KeyDownEvent>(OnKeyDown);
-        textField.style.minHeight = 256;
-        textField.style.maxHeight = 512;
-        Add(textField);
+        groupBox.RegisterCallback<KeyDownEvent>(OnKeyDown);
+        groupBox.style.minHeight = 512;
+        Add(groupBox);
     }
-
+    private void save()
+    {
+        string assetPath = EditorUtility.SaveFilePanel("save", "Image", "png", "Save the image");
+        if (!string.IsNullOrEmpty(assetPath))
+        {
+            Debug.Log("Save image to " + assetPath);
+            Texture2D texture = groupBox.style.backgroundImage.value.texture ?? groupBox.style.backgroundImage.value.sprite.texture;
+            if(texture != null && texture.isReadable)
+                File.WriteAllBytes(assetPath, texture.EncodeToPNG());
+        }
+    }
     private void OnKeyDown(KeyDownEvent evt)
     {
-        var target = evt.target as TextField;
-        if (evt.ctrlKey && evt.keyCode == KeyCode.A)
+        if (evt.ctrlKey && evt.keyCode == KeyCode.S)
         {
-            target.Focus();
-            target.SelectAll();
-        }
-        if (evt.ctrlKey && evt.keyCode == KeyCode.C)
-        {
-            GUIUtility.systemCopyBuffer = target.value;
+            save();
         }
     }
 }

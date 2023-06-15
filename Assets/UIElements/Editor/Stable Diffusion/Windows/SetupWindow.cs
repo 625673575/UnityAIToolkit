@@ -16,7 +16,9 @@ namespace StableDiffusion
         private GroupBox setupAssetGroupBox;
         private TextField installationDirectory;
         private TextField launchFile;
+        private TextField tempDirectory;
         private TextField address;
+        private Toggle saveTempFile;
         private static LaunchSetup _setup;
         public static LaunchSetup Setup { get { return _setup ?? ScriptableObject.CreateInstance<LaunchSetup>(); } set { _setup = value; } }
         #endregion
@@ -29,7 +31,9 @@ namespace StableDiffusion
             runServeButton = window.Q<Button>(nameof(runServeButton));
             installationDirectory = window.Q<TextField>(nameof(installationDirectory));
             launchFile = window.Q<TextField>(nameof(launchFile));
+            tempDirectory = window.Q<TextField>(nameof(tempDirectory));
             address = window.Q<TextField>(nameof(address));
+            saveTempFile = window.Q<Toggle>(nameof(saveTempFile));
             setupAssetObjectField.RegisterValueChangedCallback(OnAssetValueChange);
             OnAssetValueChange(setupAssetObjectField.value as LaunchSetup);
             runServeButton.RegisterCallback<ClickEvent>(OnRunServeClicked);
@@ -53,7 +57,7 @@ namespace StableDiffusion
             }
         }
 
-        private void OnAssetValueChange(ChangeEvent<UnityEngine.Object> evt)
+        private void OnAssetValueChange(ChangeEvent<Object> evt)
         {
             if (evt.newValue != null)
             {
@@ -73,15 +77,36 @@ namespace StableDiffusion
                 setupAssetGroupBox.visible = true;
                 installationDirectory.value = setup.installationDirectory;
                 launchFile.value = setup.launchFile;
+                tempDirectory.value = setup.tempFileDirectory;
                 address.value = setup.address;
+                saveTempFile.value = setup.saveTempFile;
             }
             else
             {
                 setupAssetGroupBox.visible = false;
             }
         }
+        public void SaveOnChangeHappen()
+        {
+            var setupAsset = setupAssetObjectField.value as LaunchSetup;
+            if (setupAsset != null)
+            {
+                setupAsset.installationDirectory = installationDirectory.value;
+                setupAsset.launchFile = launchFile.value;
+                setupAsset.address = address.value;
+                setupAsset.tempFileDirectory = tempDirectory.value;
+                setupAsset.saveTempFile = saveTempFile.value;
+            }
+            EditorUtility.SetDirty(setupAsset);
+            AssetDatabase.Refresh();
+        }
+        private void OnLostFocus()
+        {
+            SaveOnChangeHappen();
+        }
         private void OnDestroy()
         {
+            SaveOnChangeHappen();
             setupAssetObjectField?.UnregisterValueChangedCallback(OnAssetValueChange);
             runServeButton?.UnregisterCallback<ClickEvent>(OnRunServeClicked);
         }
