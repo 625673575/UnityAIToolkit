@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -8,8 +9,9 @@ namespace StableDiffusion
 {
     public static class GetInfo
     {
-        public static readonly Dictionary<string, string> ApiInfo = new Dictionary<string, string>()
+        public static readonly Dictionary<string, string> ApiGet = new Dictionary<string, string>()
         {
+            {"progress","/sdapi/v1/progress" },
             {"memory","/sdapi/v1/memory" },
             {"scripts" , "/sdapi/v1/scripts" },
             {"script-info","/sdapi/v1/script-info" },
@@ -18,9 +20,27 @@ namespace StableDiffusion
             {"upscalers", "/sdapi/v1/upscalers"},
             {"cmd-flags","/sdapi/v1/cmd-flags" },
             {"options","/sdapi/v1/options" },
-            {"progress","/sdapi/v1/progress" },
             {"loras","/sdapi/v1/loras" },
-            {"interrupt","/sdapi/v1/interrupt" }
+            {"prompt-styles","/sdapi/v1/prompt-styles" },
+            {"embeddings","/sdapi/v1/embeddings" },
+            {"realesrgan-models","/sdapi/v1/realesrgan-models" },
+            {"face-restorers","/sdapi/v1/face-restorers" },
+            {"controlnet-version","/controlnet/version" },
+            {"controlnet-model_list","/controlnet/model_list" },
+            {"controlnet-module_list","/controlnet/module_list" },
+        }; 
+        public static readonly Dictionary<string, string> ApiPost = new Dictionary<string, string>()
+        {
+            {"options","/sdapi/v1/options" },
+            {"interrupt","/sdapi/v1/interrupt" },
+            {"refresh-checkpoints","/sdapi/v1/refresh-checkpoints" },
+            {"create-embedding","/sdapi/v1/create/embedding" },
+            {"create-hypernetwork","/sdapi/v1/create/hypernetwork" },
+            {"preprocess","/sdapi/v1/preprocess" },
+            {"train-embedding","/sdapi/v1/train/embedding" },
+            {"train-hypernetwork","/sdapi/v1/train/hypernetwork" },
+            {"unload-checkpoint","/sdapi/v1/unload-checkpoint" },
+            {"reload-checkpoint","/sdapi/v1/reload-checkpoint" },
         };
         public static IEnumerator ProcessGetInfoCoroutine(string url, string api, string jsonParams, UnityAction<string> responseEvents, bool postMethod = false)
         {

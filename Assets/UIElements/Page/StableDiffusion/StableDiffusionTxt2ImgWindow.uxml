@@ -6,6 +6,7 @@
         <ui:TextField picking-mode="Ignore" label="Negative Prompt" name="negativePromptText" />
         <ui:SliderInt picking-mode="Ignore" label="Step" value="50" high-value="500" name="stepSliderInt" low-value="20" show-input-field="true" />
         <ui:Slider picking-mode="Ignore" label="Denoising Strength" value="0.95" high-value="1" name="denoisingStrengthSlider" show-input-field="true" />
+        <ui:Toggle label="Resolution 768" name="resolution_768" />
         <ui:Button text="Txt2Img" display-tooltip-when-elided="true" name="txt2ImgButton" />
         <ui:Instance template="ImagePreviewBar" name="imagePreviewBar" />
         <ui:ProgressBar value="0" title="progress" name="progressBar" high-value="1" />

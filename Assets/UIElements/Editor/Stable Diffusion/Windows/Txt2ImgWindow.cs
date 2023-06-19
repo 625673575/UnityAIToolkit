@@ -15,6 +15,7 @@ public class Txt2ImgWindow : EditorWindow
     private TextField promptText, negativePromptText;
     private SliderInt stepSliderInt;
     private Slider denoisingStrengthSlider;
+    private Toggle resolutionToggle;
     private ProgressBar progressBar;
 
     private void CreateGUI()
@@ -30,9 +31,9 @@ public class Txt2ImgWindow : EditorWindow
         negativePromptText = window.Q<TextField>(nameof(negativePromptText));
         stepSliderInt = window.Q<SliderInt>(nameof(stepSliderInt));
         denoisingStrengthSlider = window.Q<Slider>(nameof(denoisingStrengthSlider));
+        resolutionToggle = window.Q<Toggle>(nameof(resolutionToggle));
         progressBar = window.Q<ProgressBar>(nameof(progressBar));
     }
-    int i = 0;
     private void OnTxt2ImgClicked(ClickEvent evt)
     {
         if (setupAssetObjectField.value == null)
@@ -47,6 +48,9 @@ public class Txt2ImgWindow : EditorWindow
             negative_prompt = negativePromptText.value,
             steps = stepSliderInt.value,
             denoising_strength = denoisingStrengthSlider.value,
+            height = resolutionToggle.value ? 768 :512,
+            width = resolutionToggle.value ? 768 : 512,
+
         };
         UnityEvent<Texture2D> receiveTexEvent = new();
         receiveTexEvent.AddListener(OnReceiveTexture2D);

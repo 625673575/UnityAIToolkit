@@ -12,5 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ced8cf38a6a26e459db5b683b014a94, type: 3}
   m_Name: Stable Diffusion Config
   m_EditorClassIdentifier: 
+  installationDirectory: D:/novalAI
+  launchFile: "D:/novalAI/A\u542F\u52A8\u811A\u672C.bat"
+  commandlineArgs: []
   address: http://127.0.0.1:7861
+  tempFileDirectory: E:/StableDiffusionTemp
+  saveTempFile: 1
   extensions: []

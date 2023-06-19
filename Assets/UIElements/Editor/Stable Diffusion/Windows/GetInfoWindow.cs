@@ -13,26 +13,53 @@ namespace StableDiffusion
     {
         public VisualTreeAsset MainWindow;
         private ObjectField setupAssetObjectField;
-        private DropdownField apiDropdownField;
+        #region get
+        private GroupBox getGroupBox;
+        private DropdownField apiGetDropdownField;
         private Button getInfoButton;
+        private ScrollTextField infoGetTextField;
+        private TreeView getJsonTreeView;
+        #endregion
+
+        #region post
+        private GroupBox postGroupBox;
+        private DropdownField apiPostDropdownField;
         private Button postInfoButton;
-        private ScrollTextField infoTextField;
-        private TreeView treeView;
+        private ScrollTextField infoPostTextField;
+        private TreeView postJsonTreeView;
+        #endregion
+
+        private TabView tabView;
         private void CreateGUI()
         {
             var window = MainWindow.Instantiate();
             rootVisualElement.Add(window);
 
             setupAssetObjectField = window.Q<ObjectField>(nameof(setupAssetObjectField));
-            apiDropdownField = window.Q<DropdownField>(nameof(apiDropdownField));
-            apiDropdownField.choices = GetInfo.ApiInfo.Keys.ToList();
-            apiDropdownField.value = apiDropdownField.choices.FirstOrDefault();
+
+            //get
+            getGroupBox = window.Q<GroupBox>(nameof(getGroupBox));
+            apiGetDropdownField = window.Q<DropdownField>(nameof(apiGetDropdownField));
+            apiGetDropdownField.choices = GetInfo.ApiGet.Keys.ToList();
+            apiGetDropdownField.value = apiGetDropdownField.choices.FirstOrDefault();
             getInfoButton = window.Q<Button>(nameof(getInfoButton));
-            postInfoButton = window.Q<Button>(nameof(postInfoButton));
             getInfoButton.RegisterCallback<ClickEvent>(OnGetInfoClicked);
+            infoGetTextField = window.Q<ScrollTextField>(nameof(infoGetTextField));
+            getJsonTreeView = window.Q<TreeView>(nameof(getJsonTreeView));
+
+            //post
+            postGroupBox = window.Q<GroupBox>(nameof(postGroupBox));
+            apiPostDropdownField = window.Q<DropdownField>(nameof(apiPostDropdownField));
+            apiPostDropdownField.choices = GetInfo.ApiPost.Keys.ToList();
+            apiPostDropdownField.value = apiPostDropdownField.choices.FirstOrDefault();
+            postInfoButton = window.Q<Button>(nameof(postInfoButton));
             postInfoButton.RegisterCallback<ClickEvent>(OnPostInfoClicked);
-            infoTextField = window.Q<ScrollTextField>(nameof(infoTextField));
-            treeView = window.Q<TreeView>();
+            infoPostTextField = window.Q<ScrollTextField>(nameof(infoPostTextField));
+            postJsonTreeView = window.Q<TreeView>(nameof(postJsonTreeView));
+
+            tabView = window.Q<TabView>(nameof(tabView));
+            tabView.Add("Get", getGroupBox);
+            tabView.Add("Post", postGroupBox);
         }
 
         private void OnPostInfoClicked(ClickEvent evt)
@@ -43,7 +70,7 @@ namespace StableDiffusion
                 return;
             }
             var setupAsset = setupAssetObjectField.value as LaunchSetup;
-            this.StartCoroutine(GetInfo.ProcessGetInfoCoroutine(setupAsset.address, GetInfo.ApiInfo[apiDropdownField.value], infoTextField.textField.value, OnGetInfo, true));
+            this.StartCoroutine(GetInfo.ProcessGetInfoCoroutine(setupAsset.address, GetInfo.ApiPost[apiPostDropdownField.value], infoPostTextField.textField.value, OnGetInfo, true));
 
         }
 
@@ -55,23 +82,23 @@ namespace StableDiffusion
                 return;
             }
             var setupAsset = setupAssetObjectField.value as LaunchSetup;
-            this.StartCoroutine(GetInfo.ProcessGetInfoCoroutine(setupAsset.address, GetInfo.ApiInfo[apiDropdownField.value], "", OnGetInfo));
+            this.StartCoroutine(GetInfo.ProcessGetInfoCoroutine(setupAsset.address, GetInfo.ApiGet[apiGetDropdownField.value], "", OnGetInfo));
         }
 
         private void OnGetInfo(string json)
         {
             if (string.IsNullOrWhiteSpace(json))
                 return;
-            json = treeView.LoadJson(json, apiDropdownField.value, true, OnTreeItemSelect);
+            json = getJsonTreeView.LoadJson(json, apiGetDropdownField.value, true, OnTreeItemSelect);
             try
             {
                 json = json.PrettyPrintJson();
                 GUIUtility.systemCopyBuffer = json;
-                infoTextField.textField.value = json;
+                infoGetTextField.textField.value = json;
             }
             catch
             {
-                infoTextField.textField.value = string.Empty;
+                infoGetTextField.textField.value = string.Empty;
             }
 
         }

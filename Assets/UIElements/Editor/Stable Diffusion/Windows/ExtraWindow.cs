@@ -44,7 +44,7 @@ public class ExtraWindow : EditorWindow
     private void OnRefreshDownscalingOptionsClicked(ClickEvent evt)
     {
         LaunchSetup setup = setupAssetObjectField.value as LaunchSetup;
-        this.StartCoroutine(GetInfo.ProcessGetInfoCoroutine(setup.address, GetInfo.ApiInfo["upscalers"], "", (json) =>
+        this.StartCoroutine(GetInfo.ProcessGetInfoCoroutine(setup.address, GetInfo.ApiGet["upscalers"], "", (json) =>
         {
             try
             {

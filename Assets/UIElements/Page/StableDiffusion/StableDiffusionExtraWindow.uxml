@@ -4,8 +4,13 @@
         <HistoricObjectField label="Launch Setup" type="StableDiffusion.LaunchSetup, StableDiffusion" editor-pref-key="StableDifussionSetupAssetPath" name="setupAssetObjectField" />
         <DragDropImage text="drag&amp;drop image here or click to select" name="inputTexture" />
         <ui:IntegerField label="Resize Mode" value="0" name="resizeModeIntegerField" />
+        <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); flex-direction: row; height: auto; justify-content: space-between; align-items: stretch; flex-wrap: nowrap; align-self: auto; overflow: visible; visibility: visible;">
+            <ui:DropdownField label="Dropdown" index="-1" choices="System.Collections.Generic.List`1[System.String]" name="upscalingOptionsDropDownField" style="align-self: flex-start;" />
+            <ui:Button text="Refresh Options" display-tooltip-when-elided="true" name="refreshUpscalingOptionsButton" style="flex-direction: column; align-self: flex-end;" />
+        </ui:VisualElement>
         <ui:FloatField label="Upscaling" value="2" name="upscalingFloatField" />
-        <ui:Button text="Img2Img" display-tooltip-when-elided="true" name="img2ImgButton" />
-        <ui:GroupBox name="imageBox" style="background-image: none; height: 512px; border-left-color: rgb(0, 197, 253); border-right-color: rgb(0, 197, 253); border-top-color: rgb(0, 197, 253); border-bottom-color: rgb(0, 197, 253); width: 512px;" />
+        <ui:Button text="Image Super Resolution" display-tooltip-when-elided="true" name="img2ImgButton" />
+        <ScrollGroupBox name="imageBox" />
+        <ui:ProgressBar value="0" title="progress" name="progressBar" high-value="1" />
     </ui:VisualElement>
 </ui:UXML>

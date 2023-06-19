@@ -16,7 +16,7 @@ public class FileDialogTextField : TextField
     public new class UxmlFactory : UxmlFactory<FileDialogTextField, UxmlTraits>
     {
     }
-    public new class UxmlTraits : TextInputBaseField<string>.UxmlTraits
+    public new class UxmlTraits : TextField.UxmlTraits
     {
         private static readonly UxmlStringAttributeDescription k_Value = new UxmlStringAttributeDescription
         {

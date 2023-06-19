@@ -2,11 +2,18 @@
     <Style src="project://database/Assets/UIElements/Style/DragAndDrop.uss?fileID=7433441132597879392&amp;guid=e01ea704b9e4e504c866da2fa8f7d8db&amp;type=3#DragAndDrop" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; height: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);">
         <HistoricObjectField label="Launch Setup" type="StableDiffusion.LaunchSetup, StableDiffusion" editor-pref-key="StableDifussionSetupAssetPath" name="setupAssetObjectField" />
-        <ui:GroupBox style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96); -unity-text-outline-width: 0;">
-            <ui:DropdownField label="API" index="0" choices="no choices" name="apiDropdownField" style="flex-direction: row; align-items: auto; justify-content: flex-start; align-self: stretch;" />
+        <ui:GroupBox name="getGroupBox" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96); -unity-text-outline-width: 0;">
+            <ui:DropdownField label="API" index="0" choices="no choices" name="apiGetDropdownField" style="flex-direction: row; align-items: auto; justify-content: flex-start; align-self: stretch;" />
             <ui:Button text="Get" display-tooltip-when-elided="true" name="getInfoButton" />
+            <ScrollTextField name="infoGetTextField" focusable="true" mode="VerticalAndHorizontal" picking-mode="Ignore" style="white-space: normal;" />
+            <ui:TreeView view-data-key="unity-tree-view" focusable="true" name="getJsonTreeView" />
         </ui:GroupBox>
-        <ui:TextField picking-mode="Ignore" multiline="true" readonly="false" name="infoTextField" />
-        <ui:TreeView view-data-key="unity-tree-view" focusable="true" />
+        <ui:GroupBox name="postGroupBox" style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(96, 96, 96); border-right-color: rgb(96, 96, 96); border-top-color: rgb(96, 96, 96); border-bottom-color: rgb(96, 96, 96); -unity-text-outline-width: 0;">
+            <ui:DropdownField label="API" index="0" choices="no choices" name="apiPostDropdownField" style="flex-direction: row; align-items: auto; justify-content: flex-start; align-self: stretch;" />
+            <ui:Button text="Post" display-tooltip-when-elided="true" name="postInfoButton" />
+            <ScrollTextField name="infoPostTextField" focusable="true" mode="VerticalAndHorizontal" picking-mode="Ignore" style="white-space: normal;" />
+            <ui:TreeView view-data-key="unity-tree-view" focusable="true" name="postJsonTreeView" />
+        </ui:GroupBox>
+        <TabView name="tabView" tab-button-height="24" />
     </ui:VisualElement>
 </ui:UXML>

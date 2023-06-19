@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class ScrollTextField : ScrollView
     public new class UxmlFactory : UxmlFactory<ScrollTextField, UxmlTraits>
     {
     }
-    public new class UxmlTraits : VisualElement.UxmlTraits
+    public new class UxmlTraits : ScrollView.UxmlTraits
     {
         private static readonly float k_DefaultScrollDecelerationRate = 0.135f;
         private static readonly float k_DefaultElasticity = 0.1f;
@@ -108,6 +109,7 @@ public class ScrollTextField : ScrollView
     public TextField textField { get; private set; }
     public ScrollTextField() : base(ScrollViewMode.VerticalAndHorizontal)
     {
+        focusable = true;
         textField = new TextField() { value = "", label = "", focusable = true, multiline = true, pickingMode = PickingMode.Position };
         //textField.style.flexWrap = Wrap.Wrap;
         textField.AddManipulator(new ContextualMenuManipulator((ContextualMenuPopulateEvent evt) =>
@@ -138,22 +140,28 @@ public class ScrollTextField : ScrollView
             });
         }));
         textField.RegisterCallback<KeyDownEvent>(OnKeyDown);
-        textField.style.minHeight = 256;
-        textField.style.maxHeight = 512;
+        textField.RegisterValueChangedCallback(OnValueChanged);
+        style.minHeight = 256;
+        style.maxHeight = 512;
         Add(textField);
+    }
+
+    private void OnValueChanged(ChangeEvent<string> evt)
+    {
+        //textField.StretchToParentSize();
     }
 
     private void OnKeyDown(KeyDownEvent evt)
     {
-        var target = evt.target as TextField;
         if (evt.ctrlKey && evt.keyCode == KeyCode.A)
         {
-            target.Focus();
-            target.SelectAll();
+            textField.Q(TextField.textInputUssName).Focus();
+            textField.SelectAll();
+            evt.StopPropagation();
         }
         if (evt.ctrlKey && evt.keyCode == KeyCode.C)
         {
-            GUIUtility.systemCopyBuffer = target.value;
+            GUIUtility.systemCopyBuffer = textField.value;
         }
     }
 }
